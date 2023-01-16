@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+    -api:
+        build:
+            context: ./
+            dockerfile: Dockerfile
+        expose:
+            - 3000
+        ports:
+            - 3000:3000
+        depends_on:
+            - task-postgres
+        links:
+            - task-postgres
+        volumes:
+            - ./:/home/node/app
+        command: npm run start
+
+    task-postgres:
+        image: postgres:11
+        restart: always
+
+        ports:
+            - 3303:5432
+
+        environment:
+            POSTGRES_PASSWORD: ${DATABASE_PASS}
+            POSTGRES_USER: ${DATABASE_USER}
+            POSTGRES_DB: ${DATABASE_DB}
